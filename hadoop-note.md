@@ -58,7 +58,7 @@ export PATH=$PATH:$HADOOP_HOME/sbin
 
 ## 伪分布式
 
-1. 启动HDFS并运行MR程序
+### 1. 启动HDFS并运行MR程序
 1.1 配置`hadoop-env.sh`
 Linux中获取JDK的安装路径：
 > $ echo $JAVA_HOME
@@ -99,7 +99,8 @@ Linux中获取JDK的安装路径：
 </configuration>
 ```
 
-2. 启动集群
+### 2. 启动集群
+
 2.1格式化NameNode(第一次启动时格式化，后续不要总格式化)
 > $ bin/hdfs namenode -format
 或
