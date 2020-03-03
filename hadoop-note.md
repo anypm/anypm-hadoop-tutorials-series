@@ -127,8 +127,10 @@ $ bin/hdfs dfs -lsr /
 > $ bin/hdfs dfs -put wcinput/wc.input /user/daniel/input
 
 ### WordCount官方案例-HDFS文件系统
-$ hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.10.0.jar wordcount /user/daniel/input /user/daniel/output
-$ bin/hdfs dfs -cat /user/daniel/output/part-r-00000
+
+> $ hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.10.0.jar wordcount /user/daniel/input /user/daniel/output
+
+> $ bin/hdfs dfs -cat /user/daniel/output/part-r-00000
 
 ### 查看集群
 查看是否启动成功
