@@ -152,9 +152,19 @@ export JAVA_HOME=/opt/module/jdk-13.0.2
 
 > $ sbin/hadoop-daemon.sh start datanode
 
-##### 查看
+
+#### 查看集群
+
+##### 查看是否启动成功
+
+> $ jps
+
+
+##### Web端查看HDFS文件系统
 
 > http://IP:50070/
+
+#### 操作集群
 
 ##### 创建hdfs路径
 
@@ -178,9 +188,139 @@ export JAVA_HOME=/opt/module/jdk-13.0.2
 
 > $ bin/hdfs dfs -cat /user/daniel/output/part-r-00000
 
-### 查看集群
 
-查看是否启动成功
+#### NN格式化前的注意事项：集群挂掉重新格式化步骤
+##### 查看NameNode和DataNode进程是否运行
+
+> $ jps
+
+如果运行则关掉进程
+
+##### 删除hadoop下data和log文件夹
+
+> $ sudo rm -rf data
+
+> $ sudo rm -rf log
+
+##### 格式化DataNode
+
+> $ bin/hdfs namenode -format
+
+##### NameNode格式化注意事项
+
+**格式化NameNode会产生新的集群ID，导致NameNode和DataNode集群ID不一致，集群找不到以往的数据。所以格式化NameNode时一定要先删除data数据和log日志，然后再格式化NameNode。**
+
+
+#### log日志查看
+
+进入log日志文件夹
+
+> $ cd /opt/module/hadoop-2.10.0/logs
+
+查看日志
+
+> $ cat hadoop-root-namenode-10-255-20-11.log
+
+> $ cat hadoop-root-datanode-10-255-20-11.log
+
+#### 启动YARN并运行MR程序
+
+- 配置集群在YARN上运行MR
+- 启动、测试集群增、删、查
+- 在YARN上执行WordCount案例
+
+##### 配置集群
+
+1.配置：yarn-env.sh
+
+Linux中获取JDK的安装路径：
+
+> $ echo $JAVA_HOME
+	
+修改JAVA_HOME路径：
+
+> $ vim etc/hadoop/yarn-env.sh
+
+```
+export JAVA_HOME=/opt/module/jdk-13.0.2
+```
+
+2.配置：yarn-site.xml
+
+
+etc/hadoop/yarn-site.xml:
+
+```
+<configuration>
+    <!-- Reducer获取数据的方式 -->
+    <property>
+        <name>yarn.nodemanager.aux-services</name>
+        <value>mapreduce_shuffle</value>
+    </property>
+    <!-- 指定YARN的ResourceManager的地址 -->
+       <property>
+        <name>yarn.resourcemanager.hostname</name>
+        <value>localhost</value>
+    </property>
+    
+    <property>
+        <name>yarn.nodemanager.env-whitelist</name>
+        <value>JAVA_HOME,HADOOP_COMMON_HOME,HADOOP_HDFS_HOME,HADOOP_CONF_DIR,CLASSPATH_PREPEND_DISTCACHE,HADOOP_YARN_HOME,HADOOP_MAPRED_HOME</value>
+    </property>
+</configuration>
+```
+
+3.配置：mapred-env.sh
+
+Linux中获取JDK的安装路径：
+
+> $ echo $JAVA_HOME
+	
+修改JAVA_HOME路径：
+
+> $ vim etc/hadoop/mapred-env.sh
+
+```
+export JAVA_HOME=/opt/module/jdk-13.0.2
+```
+对mapred-site.template重命名为mapred-site.xml
+
+> $ mv etc/hadoop/mapred-site.xml.template etc/hadoop/mapred-site.xml
+
+4.配置：mapred-site.xml
+
+> $ vim etc/hadoop/mapred-site.xml
+
+```
+<!-- 指定MR运行在YARN上 -->
+    <property>
+        <name>mapreduce.framework.name</name>
+        <value>yarn</value>
+    </property>
+```
+
+##### 启动集群
+
+1.启动前确保NameNode和DataNode已经启动
+2.启动ResourceManager
+
+> $ sbin/yarn-daemon.sh start resourcemanager
+
+3.启动NodeManager
+
+> $ sbin/yarn-daemon.sh start nodemanager
+
+
+
+##### 集群操作
+
+Web端查看
+
+> http://IP:8088
+
+
+
+
 
 
 
