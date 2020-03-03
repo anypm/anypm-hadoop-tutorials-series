@@ -3,6 +3,7 @@
 ## Hadoop介绍
 略
 
+
 ## 环境搭建
 创建JDK和Hadoop的软件目录和运行时目录
 $ cd /opt
@@ -12,15 +13,20 @@ $ chmod 777 module
 $ chmod 777 software
 
 下载hadoop与jdk安装包并切换目录至软件所在目录，拷贝软件至已创建好的software目录
+
 > $ cp hadoop-2.10.0.tar /opt/software/
+
 > $ cp jdk-13.0.2_linux-x64_bin.tar /opt/software/
 
 解压jdk和hadoop至已创建好的module目录
 > $ cd /opt/software/
+
 > $ tar -xvf jdk-13.0.2_linux-x64_bin.tar -C /opt/module/
+
 > $ tar -xvf hadoop-2.10.0.tar -C /opt/module/
 
 设置jdk和hadoop环境变量
+
 >$ sudo vim /etc/profile
 
 ```
@@ -35,29 +41,44 @@ export PATH=$PATH:$HADOOP_HOME/sbin
 ```
 更新配置文件
 > $ source /etc/profile
+
 检查jdk与hadoop是否安装正常
+
 >$ java -version
+
 >$ hadoop
+
 
 ## Hadoop运行模式
 ### 本地模式
 #### Grep官方案例
+
 > $ mkdir input
+
 > $ cp etc/hadoop/*.xml input
 
 > $ bin/hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.10.0.jar grep input output 'dfs[a-z.]+'
+
+或
+
 > $ hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.10.0.jar grep input output 'dfs[a-z.]+'
+
+查看结果
 
 > $ cat output/*
 
 #### WordCount官方案例
 
 > $ mkdir wcinput
+
 > $ touch wc.input
+
 > $ vim wc.input
 
 > $ hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.10.0.jar wordcount wcinput/ wcoutput
+
 > $ cd wcoutput
+
 > $ cat part-r-00000
 
 
@@ -67,10 +88,13 @@ export PATH=$PATH:$HADOOP_HOME/sbin
 #### 配置`hadoop-env.sh`
 
 Linux中获取JDK的安装路径：
+
 > $ echo $JAVA_HOME
 	
 修改JAVA_HOME路径：
+
 > $ vim etc/hadoop/hadoop-env.sh
+
 ```
 export JAVA_HOME=/opt/module/jdk-13.0.2
 ```
@@ -78,6 +102,7 @@ export JAVA_HOME=/opt/module/jdk-13.0.2
 #### 配置：core-site.xml
 
 > $ vim etc/hadoop/core-site.xml
+
 ```
 <configuration>
 
@@ -112,28 +137,39 @@ export JAVA_HOME=/opt/module/jdk-13.0.2
 #### 启动集群
 
 ##### 格式化NameNode(第一次启动时格式化，后续不要总格式化)
+
 > $ bin/hdfs namenode -format
+
 或
+
 >$ hdfs namenode -format
 
 ##### 启动NameNode
+
 > $ sbin/hadoop-daemon.sh start namenode
 
 ##### 启动DataNode
+
 > $ sbin/hadoop-daemon.sh start datanode
 
 ##### 查看
+
 > http://IP:50070/
 
 ##### 创建hdfs路径
+
 > $ bin/hdfs dfs -mkdir -p /user/daniel/input
 
 ##### 查看路径
+
 > $ bin/hdfs dfs -ls /
+
 或
+
 > $ bin/hdfs dfs -lsr /
 
 ##### 上传文件本地文件至hdfs路径
+
 > $ bin/hdfs dfs -put wcinput/wc.input /user/daniel/input
 
 ##### WordCount官方案例-HDFS文件系统
@@ -143,6 +179,7 @@ export JAVA_HOME=/opt/module/jdk-13.0.2
 > $ bin/hdfs dfs -cat /user/daniel/output/part-r-00000
 
 ### 查看集群
+
 查看是否启动成功
 
 
